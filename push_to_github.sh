@@ -15,7 +15,7 @@ git remote add origin https://github.com/ykta100pot/finance-discovery-seed.git
 git pull origin main --allow-unrelated-histories
 
 # Add all files
-git add AGENTS.md ARCHITECTURE.md MEMORY.md DISCOVERY_SEED.md DISCOVERYSEED.md LICENSE
+git add AGENTS.md ARCHITECTURE.md MEMORY.md DISCOVERY_SEED.md LICENSE
 git add trusted_outputs/README.md processes/README.md source_systems/README.md
 git add metrics/README.md dimensions/README.md open_questions/README.md
 

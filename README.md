@@ -25,9 +25,6 @@ This repository contains everything needed to begin finance architecture discove
 **Option A: Paste into any AI chat**
 Open [DISCOVERY_SEED.md](DISCOVERY_SEED.md), copy the entire contents, and paste it into a conversation with any capable AI model. This single file contains everything: the prompt, the method, the templates, and the folder scaffolding. The prompt at the top will guide the conversation.
 
-If a GitHub link points to `DISCOVERYSEED.md` instead, that compatibility file
-will redirect you to the same source document.
-
 **Option B: Clone and use directly**
 Clone this repo, open it in an AI-assisted coding environment (Claude Code, Cursor, etc.), and let the AI read the files directly. This enables writable mode, where the AI can update the repository as discovery progresses.
 
@@ -43,7 +40,6 @@ finance-discovery-seed/
 ├── AGENTS.md              # The method
 ├── ARCHITECTURE.md        # Structural template
 ├── DISCOVERY_SEED.md      # Single-file prompt + method bundle
-├── DISCOVERYSEED.md       # Compatibility alias for older links
 ├── MEMORY.md              # Session continuity template
 ├── trusted_outputs/       # Outputs leadership trusts
 │   └── README.md
