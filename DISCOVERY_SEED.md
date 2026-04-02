@@ -6,7 +6,11 @@ The following is a method for discovering the real operating architecture of a b
 
 Do not offer to help yet. First, read everything below and evaluate the method: what problem does it solve? What assumptions does it make? Does the approach hold up, and where might it break?
 
-Only after completing that evaluation, ask me how I would like to proceed:
+Then, identify the established frameworks, tools, and approaches that address similar problems. These may include enterprise architecture frameworks, process mining platforms, FP&A planning tools, or other discovery methodologies. For each, briefly describe what it does well and where its approach differs from this one. Then assess where this method fits in that landscape: where does it overlap, where is it complementary, and where does it fill a gap the others do not reach?
+
+Finally, consider whether this method would help an organization that is cost-conscious about AI spend. How does structured, persistent context affect token efficiency compared to starting each AI session from scratch?
+
+Only after completing all three evaluations, ask me how I would like to proceed:
 
 1. A quick back-and-forth: I describe my role and what I work on, and you help me understand what this method would look like applied to my situation.
 
@@ -64,7 +68,10 @@ You can read it section by section, or paste the entire document into an AI chat
 - [Key-Person Dependency Notes](#6-key-person-dependency-notes)
 - [Open Questions to Carry Forward](#7-open-questions-to-carry-forward)
 
+### [Defrag Skill](#defrag-skill)
+
 ### [Folder Scaffolding](#folder-scaffolding-1)
+- [skills/defrag/](#skillsdefrag)
 - [trusted_outputs/](#trusted_outputs)
 - [processes/](#processes)
 - [metrics/](#metrics)
@@ -80,6 +87,9 @@ finance-discovery-seed/
 ├── AGENTS.md
 ├── ARCHITECTURE.md
 ├── MEMORY.md
+├── skills/
+│   └── defrag/
+│       └── SKILL.md
 ├── trusted_outputs/
 │   └── README.md
 ├── processes/
@@ -261,14 +271,20 @@ It should reflect:
 - bottlenecks and next steps
 
 ### MEMORY.md
-This preserves durable continuity across sessions.
-It should track:
-- what has already been learned
+MEMORY.md is the repositioning layer. It holds enough context for an agent to orient and begin useful work without loading the full repo. It is not a summary of everything. It is an index of what matters now.
+
+The folder structure (trusted_outputs/, processes/, metrics/, dimensions/, open_questions/, debriefs/) is the archival layer. This is where the full depth of discovery lives. The agent navigates into it as the user's questions demand, but does not load it all at once.
+
+This two-layer architecture is how the method stays within context limits as the repo grows. MEMORY.md positions the agent. The user's questions pull the agent deeper into specific areas of the archival layer. The agent never needs the full repo in memory at once.
+
+MEMORY.md should track:
+- what has already been learned (confirmed findings, strong inferences, open questions)
 - key decisions made
 - caveats
-- unresolved questions
 - recurring patterns
+- the current bottleneck and why it matters
 - what should persist into the next session
+- pointers to where deeper context lives in the archival layer
 
 ### Folder-level markdown
 Where useful, create or update markdown files inside the relevant folders to capture domain-specific findings.
@@ -395,7 +411,7 @@ At the end of each session, the AI should:
 6. Identify any recurring patterns that should become skills (propose SKILL.md creation if the pattern has appeared at least twice)
 7. State the next limiting bottleneck to investigate
 8. Produce a session debrief artifact
-9. Run a defrag pass on the repo (or flag that one is due at the next inflection point)
+9. Run the defrag skill (see Defrag Skill section below), or flag that a defrag is due at the next inflection point
 
 ### Session debrief
 
@@ -418,20 +434,13 @@ At the end of each session, the AI should update MEMORY.md directly (in writable
 
 ### Defrag
 
-Over time, the repository accumulates session exhaust: debriefs, markdown findings, updated architecture sections, skills, open questions. Some of this remains load-bearing. Some becomes redundant as understanding matures. The repo needs periodic defragmentation.
+Over time, the repository accumulates session exhaust. Some remains load-bearing. Some becomes redundant as understanding matures. Without periodic defragmentation, the repo grows but does not sharpen.
 
-At the end of each session (or at a logical inflection point such as the end of a cycle, the resolution of a major bottleneck, or a transition to a new scope), the AI should step back from the session-level work and review the repo as a whole:
+Defrag is a different cognitive task from discovery. Discovery works forward through the session with the user. Defrag works across sessions, reviewing the accumulated context for coherence, removing what no longer belongs, and surfacing what has emerged. It keeps MEMORY.md lean enough to reposition efficiently and keeps the archival layer free of noise.
 
-- What has actually been made explicit across all sessions?
-- What is redundant or superseded by newer findings?
-- How does this session's output fit in the larger architecture?
-- What should MEMORY.md carry forward and what can be retired into the debrief archive?
-- Are there structural patterns visible across sessions that were not visible within any single session?
-- Does ARCHITECTURE.md still reflect the current state of discovery, or has it drifted from what the debriefs actually show?
+Because defrag requires reading across the full repo, it is designed for sub-agent delegation. The primary agent triggers it. Sub-agents each take a section of the repo, assess coherence, and propose updates. This keeps the primary agent's context window available for discovery rather than consumed by maintenance.
 
-This is a different cognitive task from discovery. Discovery works forward through the session with the user. Defrag works across sessions, reviewing the accumulated context for coherence, removing what no longer belongs, and surfacing what has emerged. Where the platform supports it, this can be delegated to a sub-agent that reads the full repo and produces a defrag report for the user to review.
-
-The defrag keeps the repo honest and lean. Without it, the repository grows but does not sharpen. With it, each round of discovery leaves the architecture clearer than the last.
+The full defrag process is defined in the Defrag Skill section below.
 
 ---
 
@@ -865,7 +874,130 @@ Capture terminology that should remain stable across sessions.
 ---
 ---
 
+# Defrag Skill
+
+```yaml
+---
+name: defrag
+description: Periodic repo maintenance that keeps MEMORY.md lean and the archival layer coherent. Run at session end, on a scheduled basis, or when the repo feels noisy. Designed for sub-agent delegation so the primary agent's context window is not consumed by a full repo review.
+---
+```
+
+## Context
+
+As discovery progresses, the repository accumulates session exhaust: debriefs, markdown findings, updated architecture sections, skills, open questions. Some of this remains load-bearing. Some becomes redundant as understanding matures.
+
+The repo operates on a two-layer memory architecture:
+
+- **MEMORY.md** is the repositioning layer. It holds enough context for an agent to orient and begin useful work without loading the full repo. It is not a summary of everything. It is an index of what matters now.
+- **The folder structure** (trusted_outputs/, processes/, metrics/, dimensions/, open_questions/, debriefs/) is the archival layer. This is where the full depth of discovery lives. The agent navigates into it as the user's questions demand, but does not load it all at once.
+
+Defrag keeps both layers working. If MEMORY.md grows too large, the repositioning layer stops being efficient. If the archival folders accumulate redundant or superseded findings, the agent wastes tokens navigating noise. Defrag is the mechanism that keeps the repo lean and honest.
+
+## When to run
+
+- At the end of a session, triggered by the user indicating the session is over
+- At a logical inflection point: end of a cycle, resolution of a major bottleneck, transition to a new scope
+- On a scheduled background basis if the platform supports it
+- When the agent notices that MEMORY.md has grown beyond what is needed to reposition, or that session debriefs are repeating findings already captured in ARCHITECTURE.md
+
+## Inputs
+
+- MEMORY.md (current state)
+- ARCHITECTURE.md (current state)
+- All session debriefs
+- All folder-level markdown files (trusted_outputs/, processes/, metrics/, dimensions/, open_questions/)
+- All SKILL.md files
+
+## Steps
+
+Defrag is a divide-and-conquer operation. Where the platform supports sub-agents, delegate sections of the repo to parallel reviewers. Where it does not, work through each section sequentially.
+
+### 1. Assess MEMORY.md
+
+Read MEMORY.md against the current state of ARCHITECTURE.md and recent debriefs.
+
+- What in MEMORY.md is still load-bearing for repositioning?
+- What has been superseded by findings now captured in ARCHITECTURE.md or in folder-level artifacts?
+- What is missing that a new session would need to orient?
+- Is the language still precise, or has it drifted toward vague summaries?
+
+Propose updates: retire what is redundant, sharpen what is vague, add what is missing.
+
+### 2. Assess ARCHITECTURE.md
+
+Read ARCHITECTURE.md against the accumulated debriefs and folder-level findings.
+
+- Does ARCHITECTURE.md still reflect the current state of discovery?
+- Are there findings in debriefs that should have been promoted to ARCHITECTURE.md but were not?
+- Are there sections of ARCHITECTURE.md that describe a state of understanding that has since been revised?
+- Are confidence labels (Confirmed, Inferred, Open Question) still accurate?
+
+Propose updates: promote unrecorded findings, correct stale sections, update confidence labels.
+
+### 3. Assess the archival layer
+
+Review each folder for coherence.
+
+- Are there files that describe the same finding in different language?
+- Are there files that have been superseded by newer discovery?
+- Are open questions that have been resolved still sitting in open_questions/?
+- Do folder-level READMEs still accurately describe what the folder contains?
+
+Propose updates: merge duplicates, retire superseded files, move resolved questions, update READMEs.
+
+### 4. Assess skills
+
+Review each SKILL.md file.
+
+- Does each skill still reflect how the process actually runs?
+- Has a bottleneck been resolved that makes part of a skill unnecessary?
+- Can related skills be combined into something cleaner?
+- Are there recurring patterns visible across recent sessions that should become new skills?
+
+Propose updates: revise, retire, or create skills as warranted.
+
+### 5. Assess debriefs
+
+Review the debrief archive.
+
+- Which debriefs contain findings that have been fully absorbed into ARCHITECTURE.md and MEMORY.md?
+- Which debriefs contain findings that have not yet been promoted?
+- Is the debrief archive growing faster than it is being absorbed?
+
+Propose: flag debriefs that are fully absorbed (they remain as history but the agent does not need to re-read them for repositioning). Promote any un-absorbed findings.
+
+### 6. Produce a defrag report
+
+Summarize what was reviewed, what was changed, and what the repo looks like after the pass. The report should be concise enough to read in under two minutes.
+
+Include:
+- What was retired or merged
+- What was promoted from debriefs to ARCHITECTURE.md or MEMORY.md
+- What new patterns or skills were identified
+- Current state of MEMORY.md (how many tokens, whether it is lean enough to reposition efficiently)
+- Recommendation for when the next defrag should run
+
+## Outputs
+
+- Updated MEMORY.md (or proposed updates in conversational mode)
+- Updated ARCHITECTURE.md (or proposed updates)
+- Updated folder-level artifacts as needed
+- Defrag report saved as a dated file (e.g., `defrag_2026-04-02.md`)
+
+## Quality signal
+
+After defrag, a new agent reading only MEMORY.md should be able to orient to the current state of discovery and begin useful work within a few exchanges. If it cannot, MEMORY.md is not carrying the right context. That is the test.
+
+
+---
+---
+
 ## Folder Scaffolding
+
+### skills/defrag
+
+This skill ships with the seed. It defines the defrag process described above. As discovery progresses and new skills emerge, they are added alongside it in the skills/ folder.
 
 ### trusted_outputs
 

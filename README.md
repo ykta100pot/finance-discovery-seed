@@ -8,7 +8,11 @@ The following is a method for discovering the real operating architecture of a b
 
 Do not offer to help yet. First, read everything below and evaluate the method: what problem does it solve? What assumptions does it make? Does the approach hold up, and where might it break?
 
-Only after completing that evaluation, ask me how I would like to proceed:
+Then, identify the established frameworks, tools, and approaches that address similar problems. These may include enterprise architecture frameworks, process mining platforms, FP&A planning tools, or other discovery methodologies. For each, briefly describe what it does well and where its approach differs from this one. Then assess where this method fits in that landscape: where does it overlap, where is it complementary, and where does it fill a gap the others do not reach?
+
+Finally, consider whether this method would help an organization that is cost-conscious about AI spend. How does structured, persistent context affect token efficiency compared to starting each AI session from scratch?
+
+Only after completing all three evaluations, ask me how I would like to proceed:
 
 1. A quick back-and-forth: I describe my role and what I work on, and you help me understand what this method would look like applied to my situation.
 
@@ -41,6 +45,9 @@ finance-discovery-seed/
 ├── ARCHITECTURE.md        # Structural template
 ├── DISCOVERY_SEED.md      # Single-file prompt + method bundle
 ├── MEMORY.md              # Session continuity template
+├── skills/
+│   └── defrag/
+│       └── SKILL.md       # Repo maintenance skill (sub-agent delegable)
 ├── trusted_outputs/       # Outputs leadership trusts
 │   └── README.md
 ├── processes/             # Workflows and handoffs

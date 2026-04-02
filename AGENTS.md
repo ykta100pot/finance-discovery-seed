@@ -162,14 +162,20 @@ It should reflect:
 - bottlenecks and next steps
 
 ### MEMORY.md
-This preserves durable continuity across sessions.
-It should track:
-- what has already been learned
+MEMORY.md is the repositioning layer. It holds enough context for an agent to orient and begin useful work without loading the full repo. It is not a summary of everything. It is an index of what matters now.
+
+The folder structure (trusted_outputs/, processes/, metrics/, dimensions/, open_questions/, debriefs/) is the archival layer. This is where the full depth of discovery lives. The agent navigates into it as the user's questions demand, but does not load it all at once.
+
+This two-layer architecture is how the method stays within context limits as the repo grows. MEMORY.md positions the agent. The user's questions pull the agent deeper into specific areas of the archival layer. The agent never needs the full repo in memory at once.
+
+MEMORY.md should track:
+- what has already been learned (confirmed findings, strong inferences, open questions)
 - key decisions made
 - caveats
-- unresolved questions
 - recurring patterns
+- the current bottleneck and why it matters
 - what should persist into the next session
+- pointers to where deeper context lives in the archival layer
 
 ### Folder-level markdown
 Where useful, create or update markdown files inside the relevant folders to capture domain-specific findings.
@@ -296,7 +302,7 @@ At the end of each session, the AI should:
 6. Identify any recurring patterns that should become skills (propose SKILL.md creation if the pattern has appeared at least twice)
 7. State the next limiting bottleneck to investigate
 8. Produce a session debrief artifact
-9. Run a defrag pass on the repo (or flag that one is due at the next inflection point)
+9. Run the defrag skill (see `skills/defrag/SKILL.md`), or flag that a defrag is due at the next inflection point
 
 ### Session debrief
 
@@ -319,20 +325,13 @@ At the end of each session, the AI should update MEMORY.md directly (in writable
 
 ### Defrag
 
-Over time, the repository accumulates session exhaust: debriefs, markdown findings, updated architecture sections, skills, open questions. Some of this remains load-bearing. Some becomes redundant as understanding matures. The repo needs periodic defragmentation.
+Over time, the repository accumulates session exhaust. Some remains load-bearing. Some becomes redundant as understanding matures. Without periodic defragmentation, the repo grows but does not sharpen.
 
-At the end of each session (or at a logical inflection point such as the end of a cycle, the resolution of a major bottleneck, or a transition to a new scope), the AI should step back from the session-level work and review the repo as a whole:
+Defrag is a different cognitive task from discovery. Discovery works forward through the session with the user. Defrag works across sessions, reviewing the accumulated context for coherence, removing what no longer belongs, and surfacing what has emerged. It keeps MEMORY.md lean enough to reposition efficiently and keeps the archival layer free of noise.
 
-- What has actually been made explicit across all sessions?
-- What is redundant or superseded by newer findings?
-- How does this session's output fit in the larger architecture?
-- What should MEMORY.md carry forward and what can be retired into the debrief archive?
-- Are there structural patterns visible across sessions that were not visible within any single session?
-- Does ARCHITECTURE.md still reflect the current state of discovery, or has it drifted from what the debriefs actually show?
+Because defrag requires reading across the full repo, it is designed for sub-agent delegation. The primary agent triggers it. Sub-agents each take a section of the repo, assess coherence, and propose updates. This keeps the primary agent's context window available for discovery rather than consumed by maintenance.
 
-This is a different cognitive task from discovery. Discovery works forward through the session with the user. Defrag works across sessions, reviewing the accumulated context for coherence, removing what no longer belongs, and surfacing what has emerged. Where the platform supports it, this can be delegated to a sub-agent that reads the full repo and produces a defrag report for the user to review.
-
-The defrag keeps the repo honest and lean. Without it, the repository grows but does not sharpen. With it, each round of discovery leaves the architecture clearer than the last.
+The full defrag process is defined in `skills/defrag/SKILL.md`. Run it at session end, at logical inflection points, or on a scheduled background basis.
 
 ---
 
