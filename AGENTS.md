@@ -336,18 +336,90 @@ The defrag keeps the repo honest and lean. Without it, the repository grows but 
 
 ---
 
-## Team Scaling Principle
+## Scaling: Index-Driven Projection
 
-If multiple people use this method in parallel, each person may evolve their local context in their own area.
+Shared seed. Local discovery. Projection onto trusted outputs. Reconciliation only when earned.
 
-That is acceptable.
+The scaling problem is not "how do we merge everyone's findings." It is "how do we make local discovery visible at the altitude where decisions are made."
 
-The objective is not perfect uniformity.
-The objective is enough shared structure that local discoveries can later be collated into a larger context repository.
+### The seed is the same at every level
 
-Shared seed.
-Local discovery.
-Bottom-up collation.
+The same discovery method applies whether the user is a senior finance leader describing the outputs the board relies on or an analyst describing the reconciliation that feeds one line in the management pack. The seed does not change. The altitude does.
+
+### Senior management produces the index
+
+When senior management runs their own discovery, their trusted outputs are the highest-altitude artifacts in the organization — financial statements, board reporting, management reviews, operating packs. Their local repo describes:
+
+- Which outputs they trust
+- What decisions each output supports
+- Where their confidence is strong
+- Where their confidence is thin
+- What they believe sits beneath each section but have not verified
+
+This is not a governance task. It is the same discovery process everyone else runs, applied to the outputs that carry the most organizational authority. The index emerges from their discovery as a natural byproduct.
+
+### The index becomes the query
+
+Once senior management's trusted outputs are documented, each output — or each section, line item, or component within it — becomes an index entry. That index can then be run against the local repos that exist across the organization.
+
+The query is simple: for a given index entry, which local repos have discovered something beneath it? What workflows, processes, source systems, metrics, manual stitching, and key-person dependencies have been made explicit?
+
+### What comes back
+
+For each index entry, the return may show:
+
+- One or more local repos with relevant findings
+- Deep discovery in some areas, shallow or absent in others
+- Multiple repos touching the same territory from different vantage points
+- Areas where no local discovery has reached
+
+Each of these is a finding. Coverage tells the senior stakeholder where the architecture has been made explicit. Gaps tell them where it hasn't. Overlaps tell them where multiple people see the same territory differently — which may or may not require reconciliation.
+
+### When overlaps surface
+
+When two or more local repos map to the same output territory, the projection layer should surface the overlap without attempting to resolve it. Present it as: "These local discoveries touch the same area. Here is where they appear consistent. Here is where they describe different structures, different processes, or different definitions."
+
+The overlap itself is architectural information. It may indicate redundant processes, definitional divergence, or simply different vantage points on the same reality. The decision about whether to reconcile — and how — belongs to whoever owns the output the findings project onto.
+
+### The reconciliation decision is a management decision
+
+Some overlaps will warrant reconciliation. Others won't. A senior stakeholder seeing that two teams describe different paths into the same line item might say:
+
+- "Reconcile this — I need to know which is right"
+- "This is fine — both paths feed the number and the number is reliable"
+- "I don't need these merged, but the key-person dependency here is a risk I want addressed"
+- "Nobody has looked at this section at all — that's where I want discovery to go next"
+
+The method does not prescribe which response is correct. It makes the question visible at the right altitude so the right person can make the call. Those decisions feed back into the next round of local discovery. The person assigned to investigate a gap or reconcile a conflict runs the same method, produces the same artifacts, and their findings project onto the same index next time.
+
+### The AI role at the index layer
+
+At the local level, the AI is a discovery coach. At the projection layer, it becomes a reader across repos. Its job is:
+
+- Take each index entry and scan local repos for relevant findings
+- Present what it finds without reconciling conflicts
+- Flag where multiple repos touch the same index entry
+- Flag where no repo touches an index entry
+- Produce a summary readable by someone who has not seen the local repos
+
+The matching will be imprecise at first. Local repos use their own language. The AI infers relevance rather than relying on exact labels. Precision improves through the loop — senior management sees the match, asks questions, local discoverers clarify or correct.
+
+### What projection does not require
+
+- A shared taxonomy agreed in advance
+- A single owner of the merged architecture
+- Every local repo to use identical terminology
+- Conflicts to be resolved before the map is useful
+
+### What projection does require
+
+A shared output structure to project onto — and in most organizations, that already exists. It is the reporting the business already runs on. The method just makes it explicit enough to use as an index.
+
+### Practical sequencing
+
+Projection becomes useful after at least two or three local repos have reached enough depth to project. Attempting it too early produces a mostly empty map. Waiting too long means local repos diverge without anyone seeing the divergence.
+
+The natural trigger is when local discovery starts bumping into adjacent scope — when one person's findings reference a process or system that another person's repo also touches. That friction is the signal that projection would add value.
 
 ---
 
