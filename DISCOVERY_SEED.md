@@ -42,9 +42,10 @@ You can read it section by section, or paste the entire document into an AI chat
 - [Documentation Rules](#documentation-rules)
 - [Skills](#skills)
 - [Session Start Protocol](#session-start-protocol) (bottleneck progress summary)
-- [Session End Protocol](#session-end-protocol) (session debrief, memory management, defrag)
-- [Scaling: Index-Driven Projection](#scaling-index-driven-projection)
-- [Desired Outcome](#desired-outcome)
+- [Session Hygiene](#session-hygiene) (one task per session, scope discipline)
+- [Session End Protocol](#session-end-protocol) (closeout skill, model provenance, debrief, defrag)
+- [Scaling: Index-Driven Projection](#scaling-index-driven-projection) (fractal discovery loop)
+- [Desired Outcome](#desired-outcome) (coordination as motion)
 
 ### [ARCHITECTURE.md — The Structural Template](#architecturemd)
 - [Orientation](#1-orientation) (business type, role, scope)
@@ -59,7 +60,7 @@ You can read it section by section, or paste the entire document into an AI chat
 - [Current Bottleneck](#10-current-bottleneck)
 - [Suggested Next Discovery Steps](#11-suggested-next-discovery-steps)
 
-### [MEMORY.md — Session Continuity](#memorymd)
+### [MEMORY.md — Session Continuity Template](#memorymd)
 - [Current Context](#1-current-context)
 - [What We Know So Far](#2-what-we-know-so-far)
 - [Important Decisions Made](#3-important-decisions-made)
@@ -67,49 +68,24 @@ You can read it section by section, or paste the entire document into an AI chat
 - [Risks / Fragilities Identified](#5-risks--fragilities-identified)
 - [Key-Person Dependency Notes](#6-key-person-dependency-notes)
 - [Open Questions to Carry Forward](#7-open-questions-to-carry-forward)
+- [Next Likely Bottleneck](#8-next-likely-bottleneck)
+- [Useful Language / Definitions to Preserve](#9-useful-language--definitions-to-preserve)
+- [Latest Session Summary](#10-latest-session-summary)
 
-### [Defrag Skill](#defrag-skill)
-
-### [Folder Scaffolding](#folder-scaffolding-1)
-- [skills/defrag/](#skillsdefrag)
+### Folder Scaffolding
 - [trusted_outputs/](#trusted_outputs)
 - [processes/](#processes)
+- [source_systems/](#source_systems)
 - [metrics/](#metrics)
 - [dimensions/](#dimensions)
 - [open_questions/](#open_questions)
 
 ---
 
-## Repository Structure
+## AGENTS.md
 
-```
-finance-discovery-seed/
-├── AGENTS.md
-├── ARCHITECTURE.md
-├── MEMORY.md
-├── skills/
-│   └── defrag/
-│       └── SKILL.md
-├── trusted_outputs/
-│   └── README.md
-├── processes/
-│   └── README.md
-├── source_systems/
-│   └── README.md
-├── metrics/
-│   └── README.md
-├── dimensions/
-│   └── README.md
-└── open_questions/
-    └── README.md
-```
 
----
-
-# AGENTS.md
-## Finance Architecture Discovery Seed
-
-### Purpose
+## Purpose
 This repository is a seed for collaborative discovery between a user and an AI assistant.
 
 The goal is to make the business architecture more explicit over time by:
@@ -399,6 +375,20 @@ The session should begin with the AI demonstrating that it knows where discovery
 
 ---
 
+## Session Hygiene
+
+One task per agent per context window.
+
+This is the core discipline: the user scopes a single task before the session begins (ideally in a task document). The agent executes within that scope. When the task is done, closeout runs immediately. The next task starts a fresh session with the repository reloaded.
+
+One task per session prevents scope drift, keeps discovery focused, and ensures that the closeout protocol captures a coherent unit of work rather than a sprawl of unrelated changes. Without this boundary, sessions accumulate context, drift sideways, and the closeout finds no clear narrative to record.
+
+This is not overhead added at scale. It is insurance taken out from day one. The cost of not having it compounds silently. One unfocused session leaves the next one trying to untangle what was learned from what was attempted. Two in a row and the worldview begins to fog. Three and the repository stops serving as a reposition layer. By the fourth session, debriefs become noise and MEMORY.md drifts out of sync with what is actually true.
+
+Scoping one task per session is how you avoid that creep. The user describes the task clearly. The agent confirms the scope. Work proceeds. When done, closeout locks in what changed and why. The next task arrives clear and the agent loads context fresh.
+
+---
+
 ## Session End Protocol
 
 At the end of each session, the AI should:
@@ -411,7 +401,7 @@ At the end of each session, the AI should:
 6. Identify any recurring patterns that should become skills (propose SKILL.md creation if the pattern has appeared at least twice)
 7. State the next limiting bottleneck to investigate
 8. Produce a session debrief artifact
-9. Run the defrag skill (see Defrag Skill section below), or flag that a defrag is due at the next inflection point
+9. Run the defrag skill (see `skills/defrag/SKILL.md`), or flag that a defrag is due at the next inflection point
 
 ### Session debrief
 
@@ -423,14 +413,38 @@ The debrief should include:
 - What bottlenecks were made explicit
 - What artifacts were created or updated
 - What the next session should address
+- Which model and tool were used for this session
 
-Save the debrief as a dated file (e.g., `debrief_2026-03-31.md`) in the repo root or in a `debriefs/` folder.
+Save the debrief as a dated file with model provenance (e.g., `debrief_2026-03-31_claude-opus.md`) in the repo root or in a `debriefs/` folder.
+
+### Model provenance and tool tracking
+
+The method is designed to be model-agnostic and tool-agnostic. Discovery and implementation may move between different AI models and different tools (coding agents, chat interfaces, IDE integrations). 
+
+Tagging handoffs with the model and tool that did the work creates provenance. You can trace not just what was discovered but which model discovered it, in which tool, and across how many sessions. This matters when:
+- Evaluating the quality and coherence of discovery across sessions
+- Debugging why a particular session produced different results than a similar one
+- Understanding which tools and models are most effective for specific discovery patterns
+- Training new discoverers on which environments and models to use for particular workloads
+
+Include in your debrief header: "Model: [model name], Tool: [interface name]" so future sessions can see the provenance chain at a glance.
 
 ### Memory is the agent's responsibility
 
 The AI actively maintains MEMORY.md and ARCHITECTURE.md as part of the collaboration. This is not optional overhead for the user to manage. It is one of the primary benefits of the method: the agent handles the organizational exhaust so the user can focus on the domain knowledge and judgment that only they can provide.
 
 At the end of each session, the AI should update MEMORY.md directly (in writable mode) or present proposed updates clearly (in conversational mode). The user reviews and corrects, but the default state is that the agent keeps the repo current. If the user needs to override or adjust, they do. But the burden of maintenance sits with the agent, not the human.
+
+### Closeout as a first-class skill
+
+In writable mode, the session end protocol should be implemented as a closeout skill rather than a checklist. The closeout skill is a SKILL.md file that the agent executes to:
+- Read ARCHITECTURE.md and MEMORY.md
+- Compare them against what actually changed in the session
+- Update both files with findings
+- Write the handoff note with date and model provenance
+- Commit all changes
+
+Making closeout a skill rather than a protocol ensures it actually runs consistently and with the same rigor each time. It also means closeout can be delegated to a sub-agent if the primary agent's context window is full after a long discovery session. The skill reference lives at `skills/closeout/SKILL.md` alongside the existing `skills/defrag/SKILL.md`.
 
 ### Defrag
 
@@ -440,13 +454,52 @@ Defrag is a different cognitive task from discovery. Discovery works forward thr
 
 Because defrag requires reading across the full repo, it is designed for sub-agent delegation. The primary agent triggers it. Sub-agents each take a section of the repo, assess coherence, and propose updates. This keeps the primary agent's context window available for discovery rather than consumed by maintenance.
 
-The full defrag process is defined in the Defrag Skill section below.
+The full defrag process is defined in `skills/defrag/SKILL.md`. Run it at session end, at logical inflection points, or on a scheduled background basis.
+
+---
+
+## Desired Outcome
+
+The desired outcome is not just better notes.
+
+The desired outcome is an explicit, evolving worldview of the business architecture that:
+- reduces black-box dependency
+- supports future workflow design
+- gives AI something coherent to reason over
+- and becomes more valuable with each round of discovery
+
+### Coordination as motion, not a problem to solve
+
+Coordination overhead is real, but the goal is not to eliminate it. The goal is to reduce the latency between something changing in the world and the organization's worldview reflecting that change.
+
+The discovery loop is the mechanism that reduces that latency. Each session that updates ARCHITECTURE.md and MEMORY.md brings the organization's understanding closer to current reality. The gap between reality and worldview is where failures live — not in the automation layer, not in the agent layer, but in the staleness of the context.
+
+When a process changes and discovery has not yet made that change explicit, the organization acts on stale assumptions. When a bottleneck is resolved and nobody updates the shared understanding, the next team works around a problem that no longer exists. When a metric definition shifts and the old understanding persists in MEMORY.md, handoffs misalign.
+
+The discovery loop closes these gaps. It is not a luxury of documentation. It is the operating mechanism of a learning organization.
 
 ---
 
 ## Scaling: Index-Driven Projection
 
-Shared seed. Local discovery. Projection onto trusted outputs. Reconciliation only when earned.
+### The discovery loop is fractal
+
+The same five steps operate at every level of the organization:
+1. Orient to the outputs and scope
+2. Make the supporting structure explicit
+3. Resolve the biggest bottleneck
+4. Capture what that reveals
+5. Update the worldview
+
+An individual contributor maps their own process and resolves their own bottleneck. A team or department consolidates the worldviews of its members and prioritizes which bottleneck to resolve next. An executive consolidates departmental worldviews into a picture of the whole operation, exercises judgment, and sequences the next round of discovery.
+
+At each level, exhaust flows up and priorities flow down. The individual's discovery exhaust becomes context for the team lead. The team's consolidated worldview feeds the executive's picture. The executive's priorities flow back down as the next round of scoped discovery.
+
+This is not top-down governance. Each level runs the same method independently. The fractal structure emerges when the exhaust is captured well enough that the level above can read it without having done the discovery themselves.
+
+The index-driven projection mechanism below is how this fractal structure operates in practice for finance organizations. It is one implementation of the fractal principle, not the only way scaling works. Other organizations may project onto different shared structures — product roadmaps, customer segments, process hierarchies — depending on what the organization's decision-makers already use as their index.
+
+### Shared seed. Local discovery. Projection onto trusted outputs.
 
 The scaling problem is not "how do we merge everyone's findings." It is "how do we make local discovery visible at the altitude where decisions are made."
 
@@ -531,28 +584,14 @@ The natural trigger is when local discovery starts bumping into adjacent scope �
 
 ---
 
-## Desired Outcome
-
-The desired outcome is not just better notes.
-
-The desired outcome is an explicit, evolving worldview of the business architecture that:
-- reduces black-box dependency
-- supports future workflow design
-- gives AI something coherent to reason over
-- and becomes more valuable with each round of discovery
-
----
-
 ## One-Line Summary
 
 Start with trusted outputs, work backward to supporting structure, resolve the next limiting bottleneck, and capture what that reveals in reusable context.
 
-
----
 ---
 
-# ARCHITECTURE.md
-## Current Worldview of the Business Architecture
+## ARCHITECTURE.md
+
 
 > This document is the evolving structural map of the business as discovery progresses.
 > It should be updated as understanding improves.
@@ -742,12 +781,10 @@ Examples:
 - What changed:
 - Why:
 
-
----
 ---
 
-# MEMORY.md
-## Durable Working Context
+## MEMORY.md
+
 
 > This file preserves continuity across sessions.
 > It should capture what should not need to be rediscovered from scratch.
@@ -870,208 +907,26 @@ Capture terminology that should remain stable across sessions.
 ### What should happen next
 -
 
-
----
----
-
-# Defrag Skill
-
-```yaml
----
-name: defrag
-description: Periodic repo maintenance that keeps MEMORY.md lean and the archival layer coherent. Run at session end, on a scheduled basis, or when the repo feels noisy. Designed for sub-agent delegation so the primary agent's context window is not consumed by a full repo review.
----
-```
-
-## Context
-
-As discovery progresses, the repository accumulates session exhaust: debriefs, markdown findings, updated architecture sections, skills, open questions. Some of this remains load-bearing. Some becomes redundant as understanding matures.
-
-The repo operates on a two-layer memory architecture:
-
-- **MEMORY.md** is the repositioning layer. It holds enough context for an agent to orient and begin useful work without loading the full repo. It is not a summary of everything. It is an index of what matters now.
-- **The folder structure** (trusted_outputs/, processes/, metrics/, dimensions/, open_questions/, debriefs/) is the archival layer. This is where the full depth of discovery lives. The agent navigates into it as the user's questions demand, but does not load it all at once.
-
-Defrag keeps both layers working. If MEMORY.md grows too large, the repositioning layer stops being efficient. If the archival folders accumulate redundant or superseded findings, the agent wastes tokens navigating noise. Defrag is the mechanism that keeps the repo lean and honest.
-
-## When to run
-
-- At the end of a session, triggered by the user indicating the session is over
-- At a logical inflection point: end of a cycle, resolution of a major bottleneck, transition to a new scope
-- On a scheduled background basis if the platform supports it
-- When the agent notices that MEMORY.md has grown beyond what is needed to reposition, or that session debriefs are repeating findings already captured in ARCHITECTURE.md
-
-## Inputs
-
-- MEMORY.md (current state)
-- ARCHITECTURE.md (current state)
-- All session debriefs
-- All folder-level markdown files (trusted_outputs/, processes/, metrics/, dimensions/, open_questions/)
-- All SKILL.md files
-
-## Steps
-
-Defrag is a divide-and-conquer operation. Where the platform supports sub-agents, delegate sections of the repo to parallel reviewers. Where it does not, work through each section sequentially.
-
-### 1. Assess MEMORY.md
-
-Read MEMORY.md against the current state of ARCHITECTURE.md and recent debriefs.
-
-- What in MEMORY.md is still load-bearing for repositioning?
-- What has been superseded by findings now captured in ARCHITECTURE.md or in folder-level artifacts?
-- What is missing that a new session would need to orient?
-- Is the language still precise, or has it drifted toward vague summaries?
-
-Propose updates: retire what is redundant, sharpen what is vague, add what is missing.
-
-### 2. Assess ARCHITECTURE.md
-
-Read ARCHITECTURE.md against the accumulated debriefs and folder-level findings.
-
-- Does ARCHITECTURE.md still reflect the current state of discovery?
-- Are there findings in debriefs that should have been promoted to ARCHITECTURE.md but were not?
-- Are there sections of ARCHITECTURE.md that describe a state of understanding that has since been revised?
-- Are confidence labels (Confirmed, Inferred, Open Question) still accurate?
-
-Propose updates: promote unrecorded findings, correct stale sections, update confidence labels.
-
-### 3. Assess the archival layer
-
-Review each folder for coherence.
-
-- Are there files that describe the same finding in different language?
-- Are there files that have been superseded by newer discovery?
-- Are open questions that have been resolved still sitting in open_questions/?
-- Do folder-level READMEs still accurately describe what the folder contains?
-
-Propose updates: merge duplicates, retire superseded files, move resolved questions, update READMEs.
-
-### 4. Assess skills
-
-Review each SKILL.md file.
-
-- Does each skill still reflect how the process actually runs?
-- Has a bottleneck been resolved that makes part of a skill unnecessary?
-- Can related skills be combined into something cleaner?
-- Are there recurring patterns visible across recent sessions that should become new skills?
-
-Propose updates: revise, retire, or create skills as warranted.
-
-### 5. Assess debriefs
-
-Review the debrief archive.
-
-- Which debriefs contain findings that have been fully absorbed into ARCHITECTURE.md and MEMORY.md?
-- Which debriefs contain findings that have not yet been promoted?
-- Is the debrief archive growing faster than it is being absorbed?
-
-Propose: flag debriefs that are fully absorbed (they remain as history but the agent does not need to re-read them for repositioning). Promote any un-absorbed findings.
-
-### 6. Produce a defrag report
-
-Summarize what was reviewed, what was changed, and what the repo looks like after the pass. The report should be concise enough to read in under two minutes.
-
-Include:
-- What was retired or merged
-- What was promoted from debriefs to ARCHITECTURE.md or MEMORY.md
-- What new patterns or skills were identified
-- Current state of MEMORY.md (how many tokens, whether it is lean enough to reposition efficiently)
-- Recommendation for when the next defrag should run
-
-## Outputs
-
-- Updated MEMORY.md (or proposed updates in conversational mode)
-- Updated ARCHITECTURE.md (or proposed updates)
-- Updated folder-level artifacts as needed
-- Defrag report saved as a dated file (e.g., `defrag_2026-04-02.md`)
-
-## Quality signal
-
-After defrag, a new agent reading only MEMORY.md should be able to orient to the current state of discovery and begin useful work within a few exchanges. If it cannot, MEMORY.md is not carrying the right context. That is the test.
-
-
----
 ---
 
 ## Folder Scaffolding
 
-### skills/defrag
+Create these folders in your repository to organize findings as discovery progresses.
 
-This skill ships with the seed. It defines the defrag process described above. As discovery progresses and new skills emerge, they are added alongside it in the skills/ folder.
+### trusted_outputs/
+Outputs leadership trusts. Start here. These are the artifacts the business already relies on — financial statements, KPI views, board decks, variance packs. Discovery begins from these and works backward.
 
-### trusted_outputs
+### processes/
+Workflows and handoffs. Document the major processes involved in producing or explaining the trusted outputs. Capture who owns each step, where manual stitching occurs, and where handoffs are fragile.
 
-Use this folder to capture the outputs leadership or the local role already trusts.
+### source_systems/
+Systems that feed the process. What systems appear to provide data, logic, or control to the processes above? Document what each system does, what data it holds, and where trust in its output is strong or weak.
 
-Examples:
-- financial statements
-- KPI packs
-- board slides
-- monthly reviews
-- forecast outputs
-- operating review artifacts
+### metrics/
+Key metrics and definitions. Document the metrics the business uses, how they are defined, where ambiguity exists, and where different stakeholders may use the same name for different calculations.
 
-For each artifact, document:
-- what it is
-- who uses it
-- what decisions it supports
-- what system or structure appears to produce it
-- where ambiguity or manual stitching appears
+### dimensions/
+Business objects and dimensions. The recurring entities that organize the architecture — products, customers, regions, contracts, entities, cost centers, teams, channels, scenarios, time periods.
 
-
-### processes
-
-Use this folder to document the workflows and handoffs that produce, explain, or support trusted outputs.
-
-Focus on:
-- process steps
-- owners
-- inputs / outputs
-- manual interventions
-- recurring bottlenecks
-- fragilities
-
-
-### metrics
-
-Use this folder to document key metrics and definitions.
-
-Focus on:
-- metric definition
-- source
-- owner
-- where used
-- whether the definition is stable or contested
-
-
-### dimensions
-
-Use this folder to document recurring business objects or dimensions that organize the architecture.
-
-Examples:
-- customer
-- product
-- region
-- contract
-- entity
-- time
-- scenario
-
-Capture:
-- definition
-- importance
-- where used
-- whether it appears conformed or fragmented
-
-
-### open_questions
-
-Use this folder to capture unresolved issues discovered during the process.
-
-For each question, try to note:
-- why it matters
-- what evidence would resolve it
-- whether it blocks current understanding
-- whether it points to the next limiting bottleneck
-
-
+### open_questions/
+Unresolved issues. Questions that have surfaced during discovery but have not yet been answered. These may become the next bottleneck to investigate or may resolve themselves as discovery progresses elsewhere.

@@ -290,6 +290,20 @@ The session should begin with the AI demonstrating that it knows where discovery
 
 ---
 
+## Session Hygiene
+
+One task per agent per context window.
+
+This is the core discipline: the user scopes a single task before the session begins (ideally in a task document). The agent executes within that scope. When the task is done, closeout runs immediately. The next task starts a fresh session with the repository reloaded.
+
+One task per session prevents scope drift, keeps discovery focused, and ensures that the closeout protocol captures a coherent unit of work rather than a sprawl of unrelated changes. Without this boundary, sessions accumulate context, drift sideways, and the closeout finds no clear narrative to record.
+
+This is not overhead added at scale. It is insurance taken out from day one. The cost of not having it compounds silently. One unfocused session leaves the next one trying to untangle what was learned from what was attempted. Two in a row and the worldview begins to fog. Three and the repository stops serving as a reposition layer. By the fourth session, debriefs become noise and MEMORY.md drifts out of sync with what is actually true.
+
+Scoping one task per session is how you avoid that creep. The user describes the task clearly. The agent confirms the scope. Work proceeds. When done, closeout locks in what changed and why. The next task arrives clear and the agent loads context fresh.
+
+---
+
 ## Session End Protocol
 
 At the end of each session, the AI should:
@@ -314,14 +328,38 @@ The debrief should include:
 - What bottlenecks were made explicit
 - What artifacts were created or updated
 - What the next session should address
+- Which model and tool were used for this session
 
-Save the debrief as a dated file (e.g., `debrief_2026-03-31.md`) in the repo root or in a `debriefs/` folder.
+Save the debrief as a dated file with model provenance (e.g., `debrief_2026-03-31_claude-opus.md`) in the repo root or in a `debriefs/` folder.
+
+### Model provenance and tool tracking
+
+The method is designed to be model-agnostic and tool-agnostic. Discovery and implementation may move between different AI models and different tools (coding agents, chat interfaces, IDE integrations). 
+
+Tagging handoffs with the model and tool that did the work creates provenance. You can trace not just what was discovered but which model discovered it, in which tool, and across how many sessions. This matters when:
+- Evaluating the quality and coherence of discovery across sessions
+- Debugging why a particular session produced different results than a similar one
+- Understanding which tools and models are most effective for specific discovery patterns
+- Training new discoverers on which environments and models to use for particular workloads
+
+Include in your debrief header: "Model: [model name], Tool: [interface name]" so future sessions can see the provenance chain at a glance.
 
 ### Memory is the agent's responsibility
 
 The AI actively maintains MEMORY.md and ARCHITECTURE.md as part of the collaboration. This is not optional overhead for the user to manage. It is one of the primary benefits of the method: the agent handles the organizational exhaust so the user can focus on the domain knowledge and judgment that only they can provide.
 
 At the end of each session, the AI should update MEMORY.md directly (in writable mode) or present proposed updates clearly (in conversational mode). The user reviews and corrects, but the default state is that the agent keeps the repo current. If the user needs to override or adjust, they do. But the burden of maintenance sits with the agent, not the human.
+
+### Closeout as a first-class skill
+
+In writable mode, the session end protocol should be implemented as a closeout skill rather than a checklist. The closeout skill is a SKILL.md file that the agent executes to:
+- Read ARCHITECTURE.md and MEMORY.md
+- Compare them against what actually changed in the session
+- Update both files with findings
+- Write the handoff note with date and model provenance
+- Commit all changes
+
+Making closeout a skill rather than a protocol ensures it actually runs consistently and with the same rigor each time. It also means closeout can be delegated to a sub-agent if the primary agent's context window is full after a long discovery session. The skill reference lives at `skills/closeout/SKILL.md` alongside the existing `skills/defrag/SKILL.md`.
 
 ### Defrag
 
@@ -335,9 +373,48 @@ The full defrag process is defined in `skills/defrag/SKILL.md`. Run it at sessio
 
 ---
 
+## Desired Outcome
+
+The desired outcome is not just better notes.
+
+The desired outcome is an explicit, evolving worldview of the business architecture that:
+- reduces black-box dependency
+- supports future workflow design
+- gives AI something coherent to reason over
+- and becomes more valuable with each round of discovery
+
+### Coordination as motion, not a problem to solve
+
+Coordination overhead is real, but the goal is not to eliminate it. The goal is to reduce the latency between something changing in the world and the organization's worldview reflecting that change.
+
+The discovery loop is the mechanism that reduces that latency. Each session that updates ARCHITECTURE.md and MEMORY.md brings the organization's understanding closer to current reality. The gap between reality and worldview is where failures live — not in the automation layer, not in the agent layer, but in the staleness of the context.
+
+When a process changes and discovery has not yet made that change explicit, the organization acts on stale assumptions. When a bottleneck is resolved and nobody updates the shared understanding, the next team works around a problem that no longer exists. When a metric definition shifts and the old understanding persists in MEMORY.md, handoffs misalign.
+
+The discovery loop closes these gaps. It is not a luxury of documentation. It is the operating mechanism of a learning organization.
+
+---
+
 ## Scaling: Index-Driven Projection
 
-Shared seed. Local discovery. Projection onto trusted outputs. Reconciliation only when earned.
+### The discovery loop is fractal
+
+The same five steps operate at every level of the organization:
+1. Orient to the outputs and scope
+2. Make the supporting structure explicit
+3. Resolve the biggest bottleneck
+4. Capture what that reveals
+5. Update the worldview
+
+An individual contributor maps their own process and resolves their own bottleneck. A team or department consolidates the worldviews of its members and prioritizes which bottleneck to resolve next. An executive consolidates departmental worldviews into a picture of the whole operation, exercises judgment, and sequences the next round of discovery.
+
+At each level, exhaust flows up and priorities flow down. The individual's discovery exhaust becomes context for the team lead. The team's consolidated worldview feeds the executive's picture. The executive's priorities flow back down as the next round of scoped discovery.
+
+This is not top-down governance. Each level runs the same method independently. The fractal structure emerges when the exhaust is captured well enough that the level above can read it without having done the discovery themselves.
+
+The index-driven projection mechanism below is how this fractal structure operates in practice for finance organizations. It is one implementation of the fractal principle, not the only way scaling works. Other organizations may project onto different shared structures — product roadmaps, customer segments, process hierarchies — depending on what the organization's decision-makers already use as their index.
+
+### Shared seed. Local discovery. Projection onto trusted outputs.
 
 The scaling problem is not "how do we merge everyone's findings." It is "how do we make local discovery visible at the altitude where decisions are made."
 
@@ -419,18 +496,6 @@ A shared output structure to project onto — and in most organizations, that al
 Projection becomes useful after at least two or three local repos have reached enough depth to project. Attempting it too early produces a mostly empty map. Waiting too long means local repos diverge without anyone seeing the divergence.
 
 The natural trigger is when local discovery starts bumping into adjacent scope — when one person's findings reference a process or system that another person's repo also touches. That friction is the signal that projection would add value.
-
----
-
-## Desired Outcome
-
-The desired outcome is not just better notes.
-
-The desired outcome is an explicit, evolving worldview of the business architecture that:
-- reduces black-box dependency
-- supports future workflow design
-- gives AI something coherent to reason over
-- and becomes more valuable with each round of discovery
 
 ---
 

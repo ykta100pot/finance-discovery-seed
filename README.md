@@ -46,6 +46,8 @@ finance-discovery-seed/
 ├── DISCOVERY_SEED.md      # Single-file prompt + method bundle
 ├── MEMORY.md              # Session continuity template
 ├── skills/
+│   ├── closeout/
+│   │   └── SKILL.md       # Session closeout skill (automated worldview update)
 │   └── defrag/
 │       └── SKILL.md       # Repo maintenance skill (sub-agent delegable)
 ├── trusted_outputs/       # Outputs leadership trusts
@@ -70,11 +72,13 @@ Resolve the next limiting bottleneck.
 Capture what that reveals.
 Let the architecture emerge over time.
 
+One task per session. Closeout every time. The worldview lives in the repo, not in chat history.
+
 ## Who this is for
 
 - **The overwhelmed expert**: You own processes nobody else fully understands. The knowledge is in your head and your spreadsheets. You want to make it explicit before it becomes a liability.
 - **The new hire or inheritor**: You walked into a black box. Reports run, numbers come out, but the logic is opaque. You need to map what exists before you can improve it.
-- **The AI-ready team**: You are already using AI to solve real problems, but each effort is isolated. You want a context layer that compounds across sessions and survives for the next person.
+- **The AI-ready team**: You are already using AI to solve real problems, but each effort is isolated. You want a context layer that compounds across sessions, survives model and tool changes, and works for the next person — not just the next prompt.
 
 ## License
 
